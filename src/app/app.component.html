@@ -1,0 +1,34 @@
+<app-header></app-header>
+<div style="padding: 20px;">
+  <h1>Main Application Content</h1>
+
+  <div class="controls-row">
+    <div class="control-item-left">
+      <h2>Deal Type</h2>
+      <p-selectButton [options]="dealTypeOptions" [(ngModel)]="selectedDealType" optionLabel="label" optionValue="value"></p-selectButton>
+      <p>Selected Type: {{selectedDealType}}</p>
+    </div>
+
+    <div class="control-item-right">
+      <h2>Date Range</h2>
+      <p-calendar [(ngModel)]="dateRange" selectionMode="range" [readonlyInput]="true"></p-calendar>
+      <p>Selected Range: {{dateRange | json}}</p>
+    </div>
+  </div>
+
+  <h2>AG-Grid Table</h2>
+  <ag-grid-angular
+    style="width: 100%; height: 400px;"
+    class="ag-theme-alpine"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs"
+    [gridOptions]="gridOptions"
+    [rowSelection]="'multiple'"
+    [suppressRowClickSelection]="true"
+  >
+  </ag-grid-angular>
+
+  <h2>PrimeNG Buttons</h2>
+  <p-button label="Export" icon="pi pi-upload" styleClass="p-button-secondary"></p-button>
+  <p-button label="Refresh" icon="pi pi-refresh" [ngStyle]="{'margin-left': '.5em'}"></p-button>
+</div>
