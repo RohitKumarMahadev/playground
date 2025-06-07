@@ -1,0 +1,25 @@
+.controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Align items at the start of the cross axis */
+  margin-bottom: 20px;
+}
+
+.control-item-left {
+  margin-right: 20px; /* Add some space between items if they were to wrap */
+}
+
+.control-item-right {
+  margin-left: 20px; /* Add some space */
+}
+
+/* Optional: Ensure h2 and p tags within these items don't add excessive margins */
+.controls-row h2 {
+  margin-top: 0;
+  font-size: 1.2em; /* Adjust font size for sub-headings */
+}
+
+.controls-row p {
+  font-size: 0.9em;
+  margin-bottom: 5px;
+}
