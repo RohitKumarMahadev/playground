@@ -48,7 +48,7 @@ import { ColDef } from 'ag-grid-community';
 
       <h2>PrimeNG Buttons</h2>
       <p-button label="Export" icon="pi pi-upload" styleClass="p-button-secondary"></p-button>
-      <p-button label="Refresh" icon="pi pi-refresh" style="margin-left: .5em"></p-button>
+      <p-button label="Refresh" icon="pi pi-refresh" [style]="{'margin-left': '.5em'}"></p-button>
     </div>
   `,
   styleUrls: ['./app.component.css'] // Assuming app.component.css exists or is not needed for this basic layout
