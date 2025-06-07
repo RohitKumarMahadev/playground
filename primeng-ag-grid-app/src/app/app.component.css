@@ -25,9 +25,12 @@
 
 .search-bar-wrapper input[pInputText] {
   width: 100%; /* Makes the input field itself fill the span */
-  border-radius: 15px;
 }
 
 .calendar-wrapper {
   /* Adjust if specific sizing is needed */
+}
+
+.action-buttons-container {
+  margin-top: 20px; /* Add space above the buttons */
 }
