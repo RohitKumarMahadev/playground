@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms'; // For ngModel
 import { HeaderComponent } from './header/header.component';
 
 import { ButtonModule } from 'primeng/button';
-import { SelectButtonModule } from 'primeng/selectbutton'; // Changed from ToggleButtonModule
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { CalendarModule } from 'primeng/calendar';
 import { AgGridModule } from 'ag-grid-angular';
 import { ColDef, GridOptions } from 'ag-grid-community';
@@ -20,28 +20,29 @@ import { ColDef, GridOptions } from 'ag-grid-community';
     FormsModule,
     HeaderComponent,
     ButtonModule,
-    SelectButtonModule, // Changed from ToggleButtonModule
+    SelectButtonModule,
     CalendarModule,
     AgGridModule
   ],
-  templateUrl: './app.component.html', // Changed to templateUrl
+  templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   title = 'primeng-ag-grid-app';
 
-  // Options for SelectButton
   dealTypeOptions: any[] = [
     { label: 'DMR', value: 'dmr' },
     { label: 'New Deals', value: 'new_deals' }
   ];
-  selectedDealType: string = 'dmr'; // Default selected value
+  selectedDealType: string = 'dmr';
 
   dateRange: Date[] | undefined;
 
   columnDefs: ColDef[] = [
-    // Existing columns (10)
-    { headerName: 'ID', field: 'id', checkboxSelection: true, headerCheckboxSelection: true, width: 70, pinned: 'left' }, // Pinned ID
+    // Changed ID column to be checkbox-only
+    { headerName: '', checkboxSelection: true, headerCheckboxSelection: true, width: 50, pinned: 'left', sortable: false, filter: false, resizable: false, editable: false },
+    // If ID needs to be visible as data, add a separate column:
+    // { headerName: 'ID', field: 'id', width: 70, pinned: 'left' },
     { headerName: 'Make', field: 'make', sortable: true, filter: true, editable: true, width: 150 },
     { headerName: 'Model', field: 'model', sortable: true, filter: true, editable: true, width: 150 },
     { headerName: 'Year', field: 'year', sortable: true, filter: true, width: 100 },
@@ -51,7 +52,6 @@ export class AppComponent {
     { headerName: 'Owner', field: 'owner', sortable: true, filter: true, width: 150 },
     { headerName: 'Last Service', field: 'lastServiceDate', sortable: true, filter: 'agDateColumnFilter', width: 180 },
     { headerName: 'Price', field: 'price', sortable: true, filter: 'agNumberColumnFilter', valueFormatter: params => params.value ? '$' + params.value.toLocaleString() : '', width: 120 },
-    // Additional columns to reach 20+ (adding 10 more)
     { headerName: 'Status', field: 'status', sortable: true, filter: true, width: 100 },
     { headerName: 'Location', field: 'location', sortable: true, filter: true, width: 130 },
     { headerName: 'Dealer ID', field: 'dealerId', sortable: true, filter: true, width: 120 },
@@ -62,6 +62,8 @@ export class AppComponent {
     { headerName: 'Category', field: 'category', sortable: true, filter: true, width: 120 },
     { headerName: 'Assigned To', field: 'assignedTo', sortable: true, filter: true, width: 150 },
     { headerName: 'Priority', field: 'priority', sortable: true, filter: true, width: 100 }
+    // Add this if ID needs to be a separate visible column
+    // { headerName: 'Record ID', field: 'id', width: 100, sortable: true, filter: true },
   ];
 
   rowData = [
@@ -74,8 +76,5 @@ export class AppComponent {
 
   gridOptions: GridOptions = {
     suppressRowTransform: true,
-    // defaultColDef: { // Optional: define default properties for all columns
-    //   resizable: true,
-    // }
   };
 }
