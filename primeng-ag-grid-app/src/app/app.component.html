@@ -4,12 +4,12 @@
   <div class="controls-row">
     <div class="control-item-left">
       <h2>Deal Type</h2>
-      <p-selectButton [options]="dealTypeOptions" [(ngModel)]="selectedDealType" optionLabel="label" optionValue="value"></p-selectButton>
+      <p-selectButton [options]="dealTypeOptions" [(ngModel)]="selectedDealType" optionLabel="label" optionValue="value" (onChange)="onDealTypeChange()"></p-selectButton>
     </div>
 
     <div class="control-item-right">
       <h2>Date Range</h2>
-      <p-calendar [(ngModel)]="dateRange" selectionMode="range" [readonlyInput]="true" [showIcon]="true" appendTo="body"></p-calendar>
+      <p-calendar [(ngModel)]="dateRange" selectionMode="range" [readonlyInput]="true" showIcon="true" appendTo="body"></p-calendar>
     </div>
   </div>
 
@@ -27,5 +27,5 @@
 
   <h2>PrimeNG Buttons</h2>
   <p-button label="Export" icon="pi pi-upload" styleClass="p-button-secondary"></p-button>
-  <p-button label="Refresh" icon="pi pi-refresh" [style.margin-left]="'.5em'"></p-button>
+  <p-button label="Refresh" icon="pi pi-refresh" style="margin-left: .5em"></p-button>
 </div>

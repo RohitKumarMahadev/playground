@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { FormsModule } from '@angular/forms'; // For ngModel
+import { FormsModule } from '@angular/forms';
 
 import { HeaderComponent } from './header/header.component';
 
@@ -9,7 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { CalendarModule } from 'primeng/calendar';
 import { AgGridModule } from 'ag-grid-angular';
-import { ColDef, GridOptions } from 'ag-grid-community';
+import { ColDef, GridOptions, GridApi } from 'ag-grid-community';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +27,7 @@ import { ColDef, GridOptions } from 'ag-grid-community';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'primeng-ag-grid-app';
 
   dealTypeOptions: any[] = [
@@ -39,10 +39,7 @@ export class AppComponent {
   dateRange: Date[] | undefined;
 
   columnDefs: ColDef[] = [
-    // Changed ID column to be checkbox-only
     { headerName: '', checkboxSelection: true, headerCheckboxSelection: true, width: 50, pinned: 'left', sortable: false, filter: false, resizable: false, editable: false },
-    // If ID needs to be visible as data, add a separate column:
-    // { headerName: 'ID', field: 'id', width: 70, pinned: 'left' },
     { headerName: 'Make', field: 'make', sortable: true, filter: true, editable: true, width: 150 },
     { headerName: 'Model', field: 'model', sortable: true, filter: true, editable: true, width: 150 },
     { headerName: 'Year', field: 'year', sortable: true, filter: true, width: 100 },
@@ -62,19 +59,86 @@ export class AppComponent {
     { headerName: 'Category', field: 'category', sortable: true, filter: true, width: 120 },
     { headerName: 'Assigned To', field: 'assignedTo', sortable: true, filter: true, width: 150 },
     { headerName: 'Priority', field: 'priority', sortable: true, filter: true, width: 100 }
-    // Add this if ID needs to be a separate visible column
-    // { headerName: 'Record ID', field: 'id', width: 100, sortable: true, filter: true },
   ];
 
-  rowData = [
-    { id: 1, make: 'Toyota', model: 'Celica', year: 2002, color: 'Red', mileage: 85000, vin: 'TY123456789', owner: 'John Doe', lastServiceDate: '2023-01-15', price: 35000, status: 'Available', location: 'Lot A', dealerId: 'DLR001', stockDate: '2022-12-01', condition: 'Used', notes: 'Minor scratch on bumper', warrantyExpires: '2024-01-15', category: 'Sport', assignedTo: 'Sales Team A', priority: 'High' },
-    { id: 2, make: 'Ford', model: 'Mondeo', year: 2010, color: 'Blue', mileage: 62000, vin: 'FD987654321', owner: 'Jane Smith', lastServiceDate: '2022-11-20', price: 32000, status: 'Sold', location: 'N/A', dealerId: 'DLR002', stockDate: '2022-10-10', condition: 'Used', notes: '', warrantyExpires: '2023-11-20', category: 'Sedan', assignedTo: 'Sales Team B', priority: 'Medium' },
-    { id: 3, make: 'Porsche', model: 'Boxster', year: 2015, color: 'Silver', mileage: 30000, vin: 'PS654321987', owner: 'Mike Brown', lastServiceDate: '2023-03-10', price: 72000, status: 'Available', location: 'Showroom', dealerId: 'DLR001', stockDate: '2023-02-15', condition: 'Certified', notes: 'Excellent condition', warrantyExpires: '2026-03-10', category: 'Convertible', assignedTo: 'Sales Team A', priority: 'High' },
-    { id: 4, make: 'Honda', model: 'Civic', year: 2018, color: 'Black', mileage: 45000, vin: 'HN246813579', owner: 'Alice Green', lastServiceDate: '2023-02-01', price: 22000, status: 'Available', location: 'Lot B', dealerId: 'DLR003', stockDate: '2023-01-20', condition: 'Used', notes: 'New tires', warrantyExpires: '2024-02-01', category: 'Sedan', assignedTo: 'Sales Team C', priority: 'Medium' },
-    { id: 5, make: 'BMW', model: 'X5', year: 2016, color: 'White', mileage: 55000, vin: 'BM135792468', owner: 'Bob White', lastServiceDate: '2023-04-25', price: 45000, status: 'On Hold', location: 'Service Center', dealerId: 'DLR002', stockDate: '2023-03-05', condition: 'Used', notes: 'Awaiting parts', warrantyExpires: '2025-04-25', category: 'SUV', assignedTo: 'Service Dept', priority: 'Low' }
-  ];
+  allRowData: any[] = [];
+  rowData: any[] = []; // This will still hold the filtered data for direct binding if needed, but gridApi is prime.
+
+  private gridApi!: GridApi;
 
   gridOptions: GridOptions = {
     suppressRowTransform: true,
+    pagination: true,
+    paginationPageSize: 50,
+    onGridReady: (params) => {
+      this.gridApi = params.api;
+      this.updateGridData(); // Call updateGridData after grid is ready and API is available
+    }
   };
+
+  ngOnInit() {
+    this.generateData();
+    // Initial data load is now handled by onGridReady to ensure gridApi is set.
+  }
+
+  generateData() {
+    const makes = ['Toyota', 'Ford', 'Porsche', 'Honda', 'BMW', 'Mercedes', 'Audi', 'Lexus', 'Subaru', 'Kia'];
+    const models = ['Celica', 'Mondeo', 'Boxster', 'Civic', 'X5', 'C-Class', 'A4', 'RX350', 'Outback', 'Sorento'];
+    const colors = ['Red', 'Blue', 'Silver', 'Black', 'White', 'Green', 'Yellow', 'Grey', 'Brown', 'Orange'];
+    const owners = ['John Doe', 'Jane Smith', 'Mike Brown', 'Alice Green', 'Bob White', 'Charlie Black', 'David King', 'Eve Queen', 'Frank Prince', 'Grace Lord'];
+    const statuses = ['Available', 'Sold', 'On Hold', 'In Service'];
+    const conditions = ['New', 'Used', 'Certified'];
+    const categories = ['Sedan', 'SUV', 'Truck', 'Sport', 'Convertible', 'Hatchback'];
+    const priorities = ['High', 'Medium', 'Low'];
+
+    for (let i = 1; i <= 1000; i++) {
+      this.allRowData.push({
+        id: i,
+        make: makes[i % makes.length],
+        model: models[i % models.length],
+        year: 2000 + (i % 24),
+        color: colors[i % colors.length],
+        mileage: Math.floor(Math.random() * 150000) + 5000,
+        vin: 'VIN' + (100000000 + i),
+        owner: owners[i % owners.length],
+        lastServiceDate: `2023-${(i % 12) + 1}-${(i % 28) + 1}`,
+        price: Math.floor(Math.random() * 70000) + 15000,
+        status: statuses[i % statuses.length],
+        location: `Lot ${String.fromCharCode(65 + (i % 10))}`,
+        dealerId: `DLR${100 + (i % 5)}`,
+        stockDate: `2022-${(i % 12) + 1}-${(i % 28) + 1}`,
+        condition: conditions[i % conditions.length],
+        notes: (i % 10 === 0) ? 'Special discount available' : 'Standard model',
+        warrantyExpires: `2025-${(i % 12) + 1}-${(i % 28) + 1}`,
+        category: categories[i % categories.length],
+        assignedTo: `Team ${String.fromCharCode(65 + (i % 3))}`,
+        priority: priorities[i % priorities.length],
+        dealCategory: (i % 3 === 0) ? 'dmr' : 'new_deals'
+      });
+    }
+  }
+
+  updateGridData() {
+    if (!this.allRowData || this.allRowData.length === 0) {
+      // Data might not be generated yet if onGridReady is called before ngOnInit finishes generateData
+      // This order should be fine with generateData in ngOnInit and updateGridData in onGridReady
+      // but as a safeguard:
+      if (this.allRowData.length === 0) this.generateData();
+    }
+
+    const filteredData = this.allRowData.filter(row => row.dealCategory === this.selectedDealType);
+    this.rowData = filteredData; // Keep local copy if needed for other bindings
+
+    if (this.gridApi) {
+      this.gridApi.setRowData(this.rowData);
+    } else {
+      // console.warn('Grid API not available yet for setRowData');
+      // This case should be minimized by calling updateGridData from onGridReady.
+    }
+  }
+
+  onDealTypeChange() {
+    // console.log('Deal type changed to:', this.selectedDealType);
+    this.updateGridData();
+  }
 }
