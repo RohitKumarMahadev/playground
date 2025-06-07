@@ -23,3 +23,28 @@
   font-size: 0.9em;
   margin-bottom: 5px;
 }
+
+.search-input-container {
+  display: flex; /* Optional: to control alignment if needed, e.g., center the input if it's not full width */
+  /* justify-content: center; */ /* Uncomment to center the search bar if it's not 100% width of this container */
+}
+
+.search-input-container .p-input-icon-left {
+  width: 50%; /* Make the span container of icon and input wider */
+  /* Or use a fixed width like: width: 400px; */
+}
+
+.search-input-container input[pInputText] {
+  width: 100%; /* Make the input take the full width of its p-input-icon-left container */
+  border-radius: 15px; /* Apply rounded corners */
+}
+
+/* PrimeNG icons are usually fine, but if search icon needs adjustment: */
+/*
+.search-input-container .p-input-icon-left > .pi-search {
+  left: 10px;
+}
+.search-input-container .p-input-icon-left > input {
+  padding-left: 2.5rem;
+}
+*/
