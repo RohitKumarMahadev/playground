@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <header>
       <h1>My Angular App</h1>
+      <h1>Main Application Content</h1>
     </header>
   `,
   styles: [

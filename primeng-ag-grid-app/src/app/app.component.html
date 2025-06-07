@@ -1,18 +1,15 @@
 <app-header></app-header>
 <div style="padding: 20px;">
-  <h1>Main Application Content</h1>
 
   <div class="controls-row">
     <div class="control-item-left">
       <h2>Deal Type</h2>
       <p-selectButton [options]="dealTypeOptions" [(ngModel)]="selectedDealType" optionLabel="label" optionValue="value"></p-selectButton>
-      <p>Selected Type: {{selectedDealType}}</p>
     </div>
 
     <div class="control-item-right">
       <h2>Date Range</h2>
-      <p-calendar [(ngModel)]="dateRange" selectionMode="range" [readonlyInput]="true"></p-calendar>
-      <p>Selected Range: {{dateRange | json}}</p>
+      <p-calendar [(ngModel)]="dateRange" selectionMode="range" [readonlyInput]="true" showIcon="true" appendTo="body"></p-calendar>
     </div>
   </div>
 
