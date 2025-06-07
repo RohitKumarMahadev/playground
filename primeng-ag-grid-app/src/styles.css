@@ -1,0 +1,8 @@
+@import 'primeng/resources/themes/saga-blue/theme.css';
+@import 'primeng/resources/primeng.min.css';
+@import 'primeicons/primeicons.css';
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+
+body { font-family: var(--font-family); margin: 0; padding: 20px; background-color: #f4f4f4; color: #333; }
+h1 { color: var(--primary-color); }
