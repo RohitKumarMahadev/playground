@@ -1,50 +1,33 @@
-.controls-row {
+.controls-main-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* Align items at the start of the cross axis */
+  align-items: center;
   margin-bottom: 20px;
 }
 
-.control-item-left {
-  margin-right: 20px; /* Add some space between items if they were to wrap */
+.control-item {
+  /* Add any common styling for items if needed */
 }
 
-.control-item-right {
-  margin-left: 20px; /* Add some space */
+.select-button-wrapper {
+  /* Adjust if specific sizing is needed */
 }
 
-/* Optional: Ensure h2 and p tags within these items don't add excessive margins */
-.controls-row h2 {
-  margin-top: 0;
-  font-size: 1.2em; /* Adjust font size for sub-headings */
+.search-bar-wrapper {
+  flex-grow: 1; /* Allows search bar to expand */
+  margin: 0 15px; /* Horizontal margin for spacing */
+  display: flex; /* Ensures the span inside can be 100% width */
 }
 
-.controls-row p {
-  font-size: 0.9em;
-  margin-bottom: 5px;
+.search-bar-wrapper .p-input-icon-left {
+  width: 100%; /* Makes the icon-input combo fill the wrapper */
 }
 
-.search-input-container {
-  display: flex; /* Optional: to control alignment if needed, e.g., center the input if it's not full width */
-  /* justify-content: center; */ /* Uncomment to center the search bar if it's not 100% width of this container */
+.search-bar-wrapper input[pInputText] {
+  width: 100%; /* Makes the input field itself fill the span */
+  border-radius: 15px;
 }
 
-.search-input-container .p-input-icon-left {
-  width: 50%; /* Make the span container of icon and input wider */
-  /* Or use a fixed width like: width: 400px; */
+.calendar-wrapper {
+  /* Adjust if specific sizing is needed */
 }
-
-.search-input-container input[pInputText] {
-  width: 100%; /* Make the input take the full width of its p-input-icon-left container */
-  border-radius: 15px; /* Apply rounded corners */
-}
-
-/* PrimeNG icons are usually fine, but if search icon needs adjustment: */
-/*
-.search-input-container .p-input-icon-left > .pi-search {
-  left: 10px;
-}
-.search-input-container .p-input-icon-left > input {
-  padding-left: 2.5rem;
-}
-*/
