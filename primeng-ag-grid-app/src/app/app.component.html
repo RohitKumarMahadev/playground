@@ -5,14 +5,14 @@
     <div class="control-item select-button-wrapper">
       <p-selectButton [options]="dealTypeOptions" [(ngModel)]="selectedDealType" optionLabel="label" optionValue="value" (onChange)="onDealTypeChange()"></p-selectButton>
     </div>
+    <div class="control-item calendar-wrapper">
+      <p-calendar [(ngModel)]="dateRange" selectionMode="range" [readonlyInput]="true" [showIcon]="true" appendTo="body"></p-calendar>
+    </div>
     <div class="control-item search-bar-wrapper">
       <span class="p-input-icon-left">
         <i class="pi pi-search"></i>
         <input type="text" pInputText [(ngModel)]="searchQuery" (input)="onSearchQueryChanged($event)" placeholder="Search grid..." />
       </span>
-    </div>
-    <div class="control-item calendar-wrapper">
-      <p-calendar [(ngModel)]="dateRange" selectionMode="range" [readonlyInput]="true" [showIcon]="true" appendTo="body"></p-calendar>
     </div>
   </div>
 

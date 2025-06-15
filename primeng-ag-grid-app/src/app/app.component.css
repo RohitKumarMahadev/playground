@@ -1,21 +1,27 @@
 .controls-main-row {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; -- Changed to flex-start */
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 20px;
 }
 
 .control-item {
-  /* Add any common styling for items if needed */
+  /* Common styling for items if needed */
 }
 
 .select-button-wrapper {
-  /* Adjust if specific sizing is needed */
+  /* No specific flex properties needed, natural size */
+}
+
+.calendar-wrapper {
+  margin-left: 15px; /* Space between select button and calendar */
 }
 
 .search-bar-wrapper {
-  flex-grow: 1; /* Allows search bar to expand */
-  margin: 0 15px; /* Horizontal margin for spacing */
+  /* flex-grow: 1; -- Removed */
+  width: 300px; /* Fixed width for a smaller search bar */
+  margin-left: auto; /* Push to the far right */
   display: flex; /* Ensures the span inside can be 100% width */
 }
 
@@ -25,12 +31,9 @@
 
 .search-bar-wrapper input[pInputText] {
   width: 100%; /* Makes the input field itself fill the span */
-}
-
-.calendar-wrapper {
-  /* Adjust if specific sizing is needed */
+  /* border-radius was removed in a previous step */
 }
 
 .action-buttons-container {
-  margin-top: 20px; /* Add space above the buttons */
+  margin-top: 20px; /* Add space above the buttons - This is existing, keep it */
 }
