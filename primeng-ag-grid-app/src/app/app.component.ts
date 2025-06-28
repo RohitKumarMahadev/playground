@@ -2,17 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs'; // Import Observable
+import { Observable } from 'rxjs';
+
+import 'ag-grid-enterprise'; // Import AG-Grid Enterprise modules
 
 import { HeaderComponent } from './header/header.component';
-import { DealDataService } from './deal-data.service'; // Import DealDataService
+import { DealDataService } from './deal-data.service';
 
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { AgGridModule } from 'ag-grid-angular';
-import { ColDef, GridOptions, GridApi } from 'ag-grid-community';
+import { ColDef, GridOptions, GridApi } from 'ag-grid-community'; // GridReadyEvent might also be useful
 
 @Component({
   selector: 'app-root',
@@ -28,7 +30,6 @@ import { ColDef, GridOptions, GridApi } from 'ag-grid-community';
     InputTextModule,
     AgGridModule
   ],
-  // providers: [DealDataService], // No need if providedIn: 'root'
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -41,11 +42,10 @@ export class AppComponent implements OnInit {
   ];
   selectedDealType: string = 'dmr';
   searchQuery: string = '';
-  isLoading: boolean = false; // For loading state
+  isLoading: boolean = false;
 
   dateRange: Date[] | undefined;
 
-  // Column definitions remain the same
   columnDefs: ColDef[] = [
     { headerName: '', checkboxSelection: true, headerCheckboxSelection: true, width: 50, pinned: 'left', sortable: false, filter: false, resizable: false, editable: false },
     { headerName: 'Node Id', field: 'nodeId', width: 120 },
@@ -83,33 +83,32 @@ export class AppComponent implements OnInit {
     { headerName: 'Text1', field: 'text1', width: 200, editable: true }
   ];
 
-  // allRowData will now be populated by the service
-  // rowData is what's bound to the grid, but setRowData is preferred for updates
-  // For simplicity, we can directly use the fetched data for the grid.
-  // Let's remove allRowData and rowData direct usage for grid, relying on setRowData.
-  // private allRowData: any[] = []; // Not strictly needed if service fetches full sets
-
   private gridApi!: GridApi;
 
   gridOptions: GridOptions = {
     suppressRowTransform: true,
     pagination: true,
     paginationPageSize: 50,
+    sideBar: 'columns', // Enable the columns tool panel
     onGridReady: (params) => {
       this.gridApi = params.api;
-      this.loadInitialDeals(); // Load initial data when grid is ready
+      this.loadInitialDeals();
     },
     defaultColDef: {
         resizable: true,
         sortable: true,
         filter: true,
+        // Ensure columns are available in the tool panel
+        enableValue: true,
+        enableRowGroup: true,
+        enablePivot: true,
     }
   };
 
-  constructor(private dealDataService: DealDataService) {} // Inject DealDataService
+  constructor(private dealDataService: DealDataService) {}
 
   ngOnInit() {
-    // Initial data load is now handled by onGridReady to ensure gridApi is available
+    // Initial data load handled by onGridReady
   }
 
   loadInitialDeals() {
@@ -119,27 +118,26 @@ export class AppComponent implements OnInit {
   fetchDeals(dealType: string) {
     this.isLoading = true;
     if (this.gridApi) {
-      this.gridApi.showLoadingOverlay(); // Show loading overlay on the grid
+      this.gridApi.showLoadingOverlay();
     }
 
     let dealsObservable: Observable<any[]>;
 
     if (dealType === 'dmr') {
       dealsObservable = this.dealDataService.getDmrDeals();
-    } else { // 'new_deals'
+    } else {
       dealsObservable = this.dealDataService.getNewDeals();
     }
 
     dealsObservable.subscribe({
       next: (data) => {
         if (this.gridApi) {
-          this.gridApi.setRowData(data); // Set data into the grid
+          this.gridApi.setRowData(data);
         }
         this.isLoading = false;
         if (this.gridApi) {
-          this.gridApi.hideOverlay(); // Hide loading overlay
+          this.gridApi.hideOverlay();
         }
-        // Re-apply search filter if any, after new data is loaded
         if (this.searchQuery && this.gridApi) {
             this.gridApi.setQuickFilter(this.searchQuery);
         }
@@ -148,16 +146,14 @@ export class AppComponent implements OnInit {
         console.error('AppComponent: Error fetching deals', err);
         this.isLoading = false;
         if (this.gridApi) {
-          this.gridApi.hideOverlay(); // Hide loading overlay
-          this.gridApi.showNoRowsOverlay(); // Optionally show 'no rows' or error overlay
+          this.gridApi.hideOverlay();
+          this.gridApi.showNoRowsOverlay();
         }
-        // Potentially set an error message to display to the user
       }
     });
   }
 
   onDealTypeChange() {
-    // selectedDealType is already updated by [(ngModel)]
     this.fetchDeals(this.selectedDealType);
   }
 
@@ -168,7 +164,4 @@ export class AppComponent implements OnInit {
       this.gridApi.setQuickFilter(this.searchQuery);
     }
   }
-
-  // generateData() method is no longer needed for mock data generation
-  // It can be removed.
 }
