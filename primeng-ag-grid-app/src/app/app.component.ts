@@ -14,7 +14,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { AgGridModule } from 'ag-grid-angular';
-import { ColDef, GridOptions, GridApi } from 'ag-grid-community'; // GridReadyEvent might also be useful
+import { ColDef, GridOptions, GridApi } from 'ag-grid-community';
 
 @Component({
   selector: 'app-root',
@@ -45,6 +45,8 @@ export class AppComponent implements OnInit {
   isLoading: boolean = false;
 
   dateRange: Date[] | undefined;
+
+  rowData: any[] = []; // Restored rowData property
 
   columnDefs: ColDef[] = [
     { headerName: '', checkboxSelection: true, headerCheckboxSelection: true, width: 50, pinned: 'left', sortable: false, filter: false, resizable: false, editable: false },
@@ -89,7 +91,7 @@ export class AppComponent implements OnInit {
     suppressRowTransform: true,
     pagination: true,
     paginationPageSize: 50,
-    sideBar: 'columns', // Enable the columns tool panel
+    sideBar: 'columns',
     onGridReady: (params) => {
       this.gridApi = params.api;
       this.loadInitialDeals();
@@ -98,7 +100,6 @@ export class AppComponent implements OnInit {
         resizable: true,
         sortable: true,
         filter: true,
-        // Ensure columns are available in the tool panel
         enableValue: true,
         enableRowGroup: true,
         enablePivot: true,
@@ -131,8 +132,9 @@ export class AppComponent implements OnInit {
 
     dealsObservable.subscribe({
       next: (data) => {
+        this.rowData = data; // Also update rowData property
         if (this.gridApi) {
-          this.gridApi.setRowData(data);
+          this.gridApi.setRowData(this.rowData); // Set data into the grid
         }
         this.isLoading = false;
         if (this.gridApi) {
@@ -148,6 +150,10 @@ export class AppComponent implements OnInit {
         if (this.gridApi) {
           this.gridApi.hideOverlay();
           this.gridApi.showNoRowsOverlay();
+        }
+        this.rowData = []; // Clear rowData on error
+        if (this.gridApi) { // Ensure grid is also cleared
+            this.gridApi.setRowData([]);
         }
       }
     });
